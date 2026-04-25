@@ -1,95 +1,95 @@
-# Local LLM Setup
-This repo containsa fully local LLM setup for local coding. 
+# Local LLM Coding Environment
 
-## Tools
+A lightweight, fully local LLM setup optimized for efficient agentic coding on consumer-grade hardware. This repository provides a configuration and orchestration layer to run high-performance models like Gemma 4 and Qwen 3.6 using Llama-Swap and the Pi coding agent.
 
-The setup consists of the following tools:
-- [Llama-Swap](https://github.com/mostlygeek/llama-swap) to manage the llama-server and model swaps
-- LLMs used: [Gemma4-26B-A4B-it-Q4_K_M](https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF) & [Qwen3.6-27B-Q4_K_M](https://huggingface.co/unsloth/Qwen3.6-27B-GGUF) but any LLM with a *.gguf file would work. Mainly, these files are available from [GGML](https://huggingface.co/ggml-org) or [Unsloth](https://huggingface.co/unsloth) however there are other developers also.
-- [Pi](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent) as a minimal agentic coding harness
+## Overview
 
-### Why These Tools Specifically?
+This setup is designed to enable LLM-assisted coding without the need for expensive cloud APIs or high-end GPU clusters. It leverages specialized tools to manage model switching, server orchestration, and a minimal agentic interface, making it ideal for laptops and workstations with limited VRAM.
 
-This experiment is done to see if LLM-assisted coding is viable on a user-grade laptop. There is no dedicated Mac Mini M5 or a GPU farm. The owner of this repo is running this setup on a gaming laptop with the following specs:
+## Key Components
 
-- AMD Ryzen 9 8945H w/ Radeon 780M Graphic
-- NVIDIA 4060 RTX 8GB Laptop GPU
-- 32 GB RAM
+- **[Llama-Swap](https://github.com/mostlygeek/llama-swap)**: Orchestrates `llama-server` instances and automates model switching/swapping.
+- **[Pi](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent)**: A minimal, lightweight agentic coding harness designed for efficient tool-calling and low overhead.
+- **GGUF Models**: Support for high-performance quantized models such as:
+  - [Gemma 4 26B](https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF)
+  - [Qwen 3.6 27B](https://huggingface.co/unsloth/Qwen3.6-27B-GGUF)
 
-This limits viable options both in terms of model selection/quantization and the agentic CLI harness used. The setup was tested with Claude Code using a custom base url, as well as OpenCode. But due to those tools being very feature-rich and containing large system prompts, LLM's answer to a simple "Hi" was several minutes in both. Pi on the other hand is a minimal harness, that can still perform tool-calling but outsources majority of the rules and system prompts to the user, which makes it very lightweight.
+## Hardware Requirements & Design Philosophy
 
-Finally, Llama-Swap handles spinning up/down llama-servers for switching models. Llama.ccp is actually what runs out models, however Llama-swap packages llama-server and other llama-* tools together to manage switching between models with different parameters.
+This configuration is optimized for mid-range consumer hardware (e.g., a gaming laptop). The primary goal is to minimize latency and system overhead.
+
+**Target Hardware Example:**
+- **CPU**: AMD Ryzen 9 8945H
+- **GPU**: NVIDIA RTX 4060 (8GB VRAM)
+- **RAM**: 32 GB
+
+**Design Philosophy:**
+Unlike heavy-weight agentic tools that rely on massive system prompts, this setup uses **Pi** for its minimal footprint. By outsourcing the majority of rules and system instructions to the user, Pi maintains high responsiveness even on hardware with limited compute resources.
 
 ## Getting Started
-Getting started with this setup is fairly straightforward. 
 
-### Download Model Files
+### 1. Model Preparation
 
-Model files for Qwen3.6 27B can be found here: https://huggingface.co/unsloth/Qwen3.6-27B-GGUF/tree/main I downloaded the Qwen3.6-27B-Q4_K_M.gguf quantization but get whatever you want. This _barely_ runs on my machine, too slow to be of any use really, so depending on your hardware it may be good or impossible to run. Gemma 4 26B is here: https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF/tree/main It is SIGNIFICANTLY faster on my hardware.
+You can use pre-downloaded `.gguf` files or leverage the `-hf` flag in Llama-Swap to download models directly from HuggingFace.
 
-You can also just not download these and use the `-hf` flag with the provider/model names in the config file. This will download the snapshots into a default HuggingFace directory in your computer and reference that. 
+**Recommended Models:**
+- **Gemma 4 26B (High Performance):** [Download Link](https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF/tree/main)
+- **Qwen 3.6 27B (High Accuracy):** [Download Link](https://huggingface.co/unsloth/Qwen3.6-27B-GGUF/tree/main)
 
-Sample command to replace the command in config:
+*Note: Model performance depends heavily on your available VRAM. If running on limited hardware, prioritize smaller quantizations.*
 
-```
-llama-server --port ${PORT} -hf ggml-org/gemma-4-26B-A4B-it-GGUF --no-mmap --fit on -c 128000 --reasoning on
-```
+### 2. Installing Llama-Swap
 
-### Install Llama-Swap
-While there are several options for installing Llama-Swap, I opted for the binary. Full list of options are available [in their repo](https://github.com/mostlygeek/llama-swap).
-
-**Download** (Make sure to choose the binary for your OS.)
+The easiest way to get started is by using the pre-compiled binary.
 
 ```bash
-curl -L -o llama-swap https://github.com/mostlygeek/llama-swap/releases/download/v206/llama-swap_206_windows_amd64.zip
+# Download the Windows AMD64 binary
+curl -L -o llama-swap.zip https://github.com/mostlygeek/llama-swap/releases/download/v206/llama-swap_206_windows_amd64.zip
+
+# Extract the contents and add the directory to your PATH (optional)
+unzip llama-swap.zip
 ```
 
+### 3. Configuration and Execution
 
+Llama-Swap uses a `.yml` configuration file to manage model endpoints and parameters. A sample configuration is provided in this repository.
 
-Extract the binary on a preferred location, add that location to PATH (optional) and run like:
-
+**Run Llama-Swap:**
+```bash
+llama-swap.exe --config ./llama-swap-config.yml --listen localhost:LLSWAP_PORT
 ```
-llama-swap.exe --config C:\Users\Elvan\Projects\local-llm-setup\llama-swap-config.yml --listen localhost:$LLSWAP_PORT
-```
-Replace $LLSWAP_PORT with any port you prefer. **This will be your main URL**. You can now visit http://127.0.0.1:LLSWAP_PORT to see your Llama-Swap UI. 
+*Replace `LLSWAP_PORT` with your desired port. You can access the Llama-Swap UI at `http://127.0.0.1:LLSWAP_PORT`.*
 
-Llama-swap relies on a configuration file. The minimal config file I am using is present in this repo, but the configurations can vary widely. Mostly my config specifies the model files and their names/configs. Refer to [documentation](https://github.com/mostlygeek/llama-swap/blob/main/docs/configuration.md) for more details.
+**Important:** In the configuration file, use `${PORT}` for internal Llama-Swap port assignment. Do **not** replace this placeholder manually.
 
+#### Running as a Background Service (Windows)
 
-**Important** DO NOT replace `${PORT}` with a port number. This is a setting that allows llama-swap to **automatically** assign a port to each model. So `LLSWAP_PORT` is a user assigned port number, whatever port you want to use to access the UI and the models but `${PORT}` is an internal reference that must not be replaced.
+To run the server persistently in the background using PowerShell:
 
-### Running as a Permanent Server
-
-I personally opted to run this as a permanent service in the background so I don't have to worry about terminal windows. Here is the Powershell command for this:
-
-```Powershell
-Start-Process -FilePath "llama-swap.exe" -ArgumentList "--config","C:\Users\Elvan\Projects\local-llm-setup\llama-swap-config.yml","--listen","localhost:$LLSWAP_PORT" -RedirectStandardOutput
-  llama-swap.log -RedirectStandardError llama-swap.err -WindowStyle Hidden
+```powershell
+Start-Process -FilePath "llama-swap.exe" -ArgumentList "--config","./llama-swap-config.yml","--listen","localhost:LLSWAP_PORT" -RedirectStandardOutput llama-swap.log -RedirectStandardError llama-swap.err -WindowStyle Hidden
 ```
 
-You can do this on Linux/macOs similarly, just swap the variables with binary, config file:
+#### Running as a Background Service (Linux/macOS)
 
 ```bash
-nohup ${llama-swap-binary} --config ${llama-swap-config} --listen localhost:$LLSWAP_PORT > llama-swap.log 2>&1 & 
+nohup ./llama-swap --config ./llama-swap-config.yml --listen localhost:LLSWAP_PORT > llama-swap.log 2>&1 & 
 ```
 
-## Setting Up Pi
+### 4. Setting Up Pi
 
-Follow the setup instructions on the [repo](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent).
+Follow the setup instructions on the [Pi repository](https://github.com/badlogic/pi-mode/tree/main/packages/coding-agent).
 
-After installing Pi, it must be made aware of the Llama-swap's OpenAI compatible rest endpoints. 
+After installing Pi, you must configure it to use the Llama-Swap OpenAI-compatible endpoints.
 
-Steps:
+1. Locate your Pi installation directory (default: `~/.pi`).
+2. Navigate to `$PI_DIR/agent/extensions`. Create the `extensions` directory if it doesn't exist.
+3. Create a `custom_llms.ts` file with the following content. Ensure the `id`s match the model IDs defined in your `llama-swap-config.yml`.
 
-- Find where the Pi was installed to (i.e. PI_DIR). By default it is in `~/.pi`
-- Go to $PI_DIR/agent/extenstions. If you haven't installed extensions before, this dir may not exist, if so create it.
-- Create a `custom_llms.ts` file with the contents similar to what's below. Pi will automatically source this file and your models will show under /model command. Model names can be whatever you like but the **ids must match to llama-swap model ids**.
-
-```TypeScript
+```typescript
 import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 
 export default function (pi: ExtensionAPI) {
-
   // Register new provider with models
   pi.registerProvider("llama", {
     baseUrl: "http://127.0.0.1:LLSWAP_PORT/v1",
@@ -109,7 +109,7 @@ export default function (pi: ExtensionAPI) {
         id: "gemma4-26b-reasoning",
         name: "Gemma4 26B Reasoning",
         reasoning: true,
-        input: ["text", "image"],
+        input: ["api", "image"],
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         contextWindow: 128000,
         maxTokens: 4096
