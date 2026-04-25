@@ -1,2 +1,5 @@
 *.gguf
 llama-swap/
+llama-swap.err
+llama-swap.log
+windows-start-stop.md
