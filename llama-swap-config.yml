@@ -1,0 +1,105 @@
+models:
+
+  "Gemma4-26B":
+    cmd: >
+    llama-server --port ${PORT} --host 127.0.0.1  -m models/gemma-4-26B-A4B-it-Q4_K_M.gguf --n-gpu-layers auto --split-mode layer --parallel 1 --batch-size 512 --ubatch-size 512 --ctx-size 131072 --image-min-tokens 300 --image-max-tokens 512 --flash-attn on --jinja --cache-ram 2048 --reasoning on --ctx-checkpoints 1
+    filters:
+      stripParams: "temperature, top_p, top_k, min_p, presence_penalty, repeat_penalty"
+      
+      setParamsByID:
+        "${MODEL_ID}:thinking":
+          chat_template_kwargs:
+            enable_thinking: true
+          reasoning_budget: 4096
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0
+
+
+        "${MODEL_ID}:thinking-coding":
+          chat_template_kwargs:
+            enable_thinking: true
+          reasoning_budget: 4096
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.17
+
+
+        "${MODEL_ID}:instruct":
+          chat_template_kwargs:
+            enable_thinking: false
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0
+
+
+        "${MODEL_ID}:instruct-reasoning":
+          chat_template_kwargs:
+            enable_thinking: true
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0 
+
+  "Qwen3.4-27B":
+    cmd: > 
+    llama-server --port ${PORT} --host 127.0.0.1  -m models/Qwen3.6-27B-Q4_K_M.gguf  --n-gpu-layers auto --split-mode layer --parallel 1 --batch-size 512 --ubatch-size 512 --ctx-size 131072 --image-min-tokens 300 --image-max-tokens 512 --flash-attn on --jinja --cache-ram 2048 --reasoning on --ctx-checkpoints 1
+    filters:
+      stripParams: "temperature, top_p, top_k, min_p, presence_penalty, repeat_penalty"
+      
+      setParamsByID:
+        "${MODEL_ID}:thinking":
+          chat_template_kwargs:
+            enable_thinking: true
+          reasoning_budget: 4096
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0
+
+
+        "${MODEL_ID}:thinking-coding":
+          chat_template_kwargs:
+            enable_thinking: true
+          reasoning_budget: 4096
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.17
+
+
+        "${MODEL_ID}:instruct":
+          chat_template_kwargs:
+            enable_thinking: false
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0
+
+
+        "${MODEL_ID}:instruct-reasoning":
+          chat_template_kwargs:
+            enable_thinking: true
+          temperature: 1.0
+          top_p: 0.9
+          top_k: 20
+          min_p: 0.1
+          presence_penalty: 0.0
+          repeat_penalty: 1.0 
