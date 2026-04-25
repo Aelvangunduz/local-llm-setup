@@ -1,9 +1,22 @@
 # Local LLM Setup
-This repo contains an example setup for fully local LLM ~vibing~ on meager hardware. The use case for this setup is essentially tinkering on personal projects with some assistance from coding LLMs, with agentic harnesses.
+This repo containsa fully local LLM setup for local coding. 
 
 ## Tools
 
 The setup consists of the following tools:
-- Llama-Swap to manage the llama-server and model swaps
-- LLMs used: Gemma4-26B-A4B-it-Q4_K_M & Qwen3.6-27B-Q4_K_M
-- Pi as a minimal agentic coding harness
+- [Llama-Swap](https://github.com/mostlygeek/llama-swap) to manage the llama-server and model swaps
+- LLMs used: [Gemma4-26B-A4B-it-Q4_K_M](https://huggingface.co/ggml-org/gemma-4-26B-A4B-it-GGUF) & [Qwen3.6-27B-Q4_K_M](https://huggingface.co/unsloth/Qwen3.6-27B-GGUF) but any LLM with a *.gguf file would work. Mainly, these files are available from [GGML](https://huggingface.co/ggml-org) or [Unsloth](https://huggingface.co/unsloth) however there are other developers also.
+- [Pi](https://huggingface.co/unsloth) as a minimal agentic coding harness
+
+### Why These Tools Specifically?
+
+This experiment is done to see if LLM-assisted coding is viable on a user-grade laptop. There is no dedicated Mac Mini M5 or a GPU farm. The owner of this repo is running this setup on a gaming laptop with the following specs:
+
+- AMD Ryzen 9 8945H w/ Radeon 780M Graphic
+- NVIDIA 4060 RTX 8GB Laptop GPU
+- 32 GB RAM
+
+This limits viable options both in terms of model selection/quantization and the agentic CLI harness used. The setup was tested with Claude Code using a custom base url, as well as OpenCode. But due to those tools being very feature-rich and containing large system prompts, LLM's answer to a simple "Hi" was several minutes in both. Pi on the other hand is a minimal harness, that can still perform tool-calling but outsources majority of the rules and system prompts to the user, which makes it very lightweight.
+
+
+
