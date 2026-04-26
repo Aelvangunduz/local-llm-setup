@@ -84,7 +84,7 @@ nohup ./llama-swap --config ./llama-swap-config.yml --listen localhost:LLSWAP_PO
 
 ### 4. Setting Up Pi
 
-Follow the setup instructions on the [Pi repository](https://github.com/badlogic/pi-mode/tree/main/packages/coding-agent).
+Follow the setup instructions on the [Pi repository](https://github.com/badlogic/pi-mono/tree/main/packages/coding-agent).
 
 After installing Pi, you must configure it to use the Llama-Swap OpenAI-compatible endpoints.
 
