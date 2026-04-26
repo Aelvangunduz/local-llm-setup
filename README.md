@@ -28,7 +28,13 @@ Unlike heavy-weight agentic tools that rely on massive system prompts, this setu
 
 ## Getting Started
 
-### 1. Model Preparation
+### 1. Prerequisites 
+
+#### 1.1 Installing Llama.cpp
+
+Llama.cpp must be installed to have access to llama-server that runs in the backend. Follow the instructions for your system. https://github.com/ggml-org/llama.cpp/blob/master/docs/install.md
+
+#### 1.2 Model Preparation
 
 You can use pre-downloaded `.gguf` files or leverage the `-hf` flag in Llama-Swap to download models directly from HuggingFace.
 

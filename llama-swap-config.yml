@@ -1,14 +1,14 @@
 models:
   gemma4-26b-reasoning:
-    cmd: llama-server --port ${PORT} -m C:\Users\Elvan\Projects\local-llm-setup\models\gemma-4-26B-A4B-it-Q4_K_M.gguf --no-mmap --fit on -c 128000 --reasoning on
+    cmd: llama-server --port ${PORT} -hf ggml-org/gemma-4-26B-A4B-it-GGUF --no-mmap --fit on -c 128000 --reasoning on
   
   gemma4-26b-no-reasoning:
-    cmd: llama-server --port ${PORT} -m C:\Users\Elvan\Projects\local-llm-setup\models\gemma-4-26B-A4B-it-Q4_K_M.gguf --no-mmap --fit on -c 128000 --reasoning off
+    cmd: llama-server --port ${PORT} -hf ggml-org/gemma-4-26B-A4B-it-GGUF --no-mmap --fit on -c 128000 --reasoning off
 
   qwen3.6-27b-reasoning:
-    cmd: llama-server --port ${PORT} -m C:\Users\Elvan\Projects\local-llm-setup\models\Qwen3.6-27B-Q4_K_M.gguf --no-mmap --fit on -c 128000 --reasoning on
+    cmd: llama-server --port ${PORT} -hf unsloth/Qwen3.6-27B-GGUF --no-mmap --fit on -c 128000 --reasoning on
   
   qwen3.6-27b-no-reasoning:
-    cmd: llama-server --port ${PORT} -m C:\Users\Elvan\Projects\local-llm-setup\models\Qwen3.6-27B-Q4_K_M.gguf --no-mmap --fit on -c 128000 --reasoning off
+    cmd: llama-server --port ${PORT} -hf unsloth/Qwen3.6-27B-GGUF --no-mmap --fit on -c 128000 --reasoning off
 
   
