@@ -115,7 +115,7 @@ export default function (pi: ExtensionAPI) {
         id: "gemma4-26b-reasoning",
         name: "Gemma4 26B Reasoning",
         reasoning: true,
-        input: ["api", "image"],
+        input: ["text", "image"],
         cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
         contextWindow: 128000,
         maxTokens: 4096
